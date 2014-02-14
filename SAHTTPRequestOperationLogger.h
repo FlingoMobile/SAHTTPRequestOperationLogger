@@ -1,4 +1,4 @@
-// AFHTTPRequestLogger.h
+// SAHTTPRequestLogger.h
 //
 // Copyright (c) 2011 AFNetworking (http://afnetworking.com/)
 //
@@ -22,30 +22,30 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, AFHTTPRequestLoggerLevel) {
-  AFLoggerLevelOff,
-  AFLoggerLevelDebug,
-  AFLoggerLevelInfo,
-  AFLoggerLevelWarn,
-  AFLoggerLevelError,
-  AFLoggerLevelFatal = AFLoggerLevelOff,
+typedef NS_ENUM(NSUInteger, SAHTTPRequestLoggerLevel) {
+  SALoggerLevelOff,
+  SALoggerLevelDebug,
+  SALoggerLevelInfo,
+  SALoggerLevelWarn,
+  SALoggerLevelError,
+  SALoggerLevelFatal = SALoggerLevelOff,
 };
 
 /**
- `AFHTTPRequestOperationLogger` logs requests and responses made by AFNetworking, with an adjustable level of detail.
+ `SAHTTPRequestOperationLogger` logs requests and responses made by SANetworking, with an adjustable level of detail.
  
- Applications should enable the shared instance of `AFHTTPRequestOperationLogger` in `AppDelegate -application:didFinishLaunchingWithOptions:`:
+ Applications should enable the shared instance of `SAHTTPRequestOperationLogger` in `AppDelegate -application:didFinishLaunchingWithOptions:`:
 
-        [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
+        [[SAHTTPRequestOperationLogger sharedLogger] startLogging];
  
- `AFHTTPRequestOperationLogger` listens for `AFNetworkingOperationDidStartNotification` and `AFNetworkingOperationDidFinishNotification` notifications, which are posted by AFNetworking as request operations are started and finish. For further customization of logging output, users are encouraged to implement desired functionality by listening for these notifications.
+ `SAHTTPRequestOperationLogger` listens for `SANetworkingOperationDidStartNotification` and `SANetworkingOperationDidFinishNotification` notifications, which are posted by SANetworking as request operations are started and finish. For further customization of logging output, users are encouraged to implement desired functionality by listening for these notifications.
  */
-@interface AFHTTPRequestOperationLogger : NSObject
+@interface SAHTTPRequestOperationLogger : NSObject
 
 /**
- The level of logging detail. See "Logging Levels" for possible values. `AFLoggerLevelInfo` by default.
+ The level of logging detail. See "Logging Levels" for possible values. `SALoggerLevelInfo` by default.
  */
-@property (nonatomic, assign) AFHTTPRequestLoggerLevel level;
+@property (nonatomic, assign) SAHTTPRequestLoggerLevel level;
 
 /**
  Only log operations conforming to the specified predicate, if specified. `nil` by default.
@@ -76,32 +76,32 @@ typedef NS_ENUM(NSUInteger, AFHTTPRequestLoggerLevel) {
 /**
  ## Logging Levels
 
- The following constants specify the available logging levels for `AFHTTPRequestOperationLogger`:
+ The following constants specify the available logging levels for `SAHTTPRequestOperationLogger`:
 
  enum {
- AFLoggerLevelOff,
- AFLoggerLevelDebug,
- AFLoggerLevelInfo,
- AFLoggerLevelWarn,
- AFLoggerLevelError,
- AFLoggerLevelFatal = AFLoggerLevelOff,
+ SALoggerLevelOff,
+ SALoggerLevelDebug,
+ SALoggerLevelInfo,
+ SALoggerLevelWarn,
+ SALoggerLevelError,
+ SALoggerLevelFatal = SALoggerLevelOff,
  }
 
- `AFLoggerLevelOff`
+ `SALoggerLevelOff`
  Do not log requests or responses.
 
- `AFLoggerLevelDebug`
+ `SALoggerLevelDebug`
  Logs HTTP method, URL, header fields, & request body for requests, and status code, URL, header fields, response string, & elapsed time for responses.
  
- `AFLoggerLevelInfo`
+ `SALoggerLevelInfo`
  Logs HTTP method & URL for requests, and status code, URL, & elapsed time for responses.
 
- `AFLoggerLevelWarn`
+ `SALoggerLevelWarn`
  Logs HTTP method & URL for requests, and status code, URL, & elapsed time for responses, but only for failed requests.
  
- `AFLoggerLevelError`
- Equivalent to `AFLoggerLevelWarn`
+ `SALoggerLevelError`
+ Equivalent to `SALoggerLevelWarn`
 
- `AFLoggerLevelFatal`
- Equivalent to `AFLoggerLevelOff`
+ `SALoggerLevelFatal`
+ Equivalent to `SALoggerLevelOff`
  */

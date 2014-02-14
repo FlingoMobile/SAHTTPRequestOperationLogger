@@ -1,4 +1,4 @@
-// AFHTTPRequestLogger.h
+// SAHTTPRequestLogger.h
 //
 // Copyright (c) 2011 AFNetworking (http://afnetworking.com/)
 //
@@ -20,15 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import "AFHTTPRequestOperationLogger.h"
-#import "AFHTTPRequestOperation.h"
+#import "SAHTTPRequestOperationLogger.h"
+#import "SAHTTPRequestOperation.h"
 
 #import <objc/runtime.h>
 
-@implementation AFHTTPRequestOperationLogger
+@implementation SAHTTPRequestOperationLogger
 
 + (instancetype)sharedLogger {
-    static AFHTTPRequestOperationLogger *_sharedLogger = nil;
+    static SAHTTPRequestOperationLogger *_sharedLogger = nil;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -44,7 +44,7 @@
         return nil;
     }
     
-    self.level = AFLoggerLevelInfo;
+    self.level = SALoggerLevelInfo;
     
     return self;
 }
@@ -56,8 +56,8 @@
 - (void)startLogging {
     [self stopLogging];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(HTTPOperationDidStart:) name:AFNetworkingOperationDidStartNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(HTTPOperationDidFinish:) name:AFNetworkingOperationDidFinishNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(HTTPOperationDidStart:) name:SANetworkingOperationDidStartNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(HTTPOperationDidFinish:) name:SANetworkingOperationDidFinishNotification object:nil];
 }
 
 - (void)stopLogging {
@@ -66,16 +66,16 @@
 
 #pragma mark - NSNotification
 
-static void * AFHTTPRequestOperationStartDate = &AFHTTPRequestOperationStartDate;
+static void * SAHTTPRequestOperationStartDate = &SAHTTPRequestOperationStartDate;
 
 - (void)HTTPOperationDidStart:(NSNotification *)notification {
-    AFHTTPRequestOperation *operation = (AFHTTPRequestOperation *)[notification object];
+    SAHTTPRequestOperation *operation = (SAHTTPRequestOperation *)[notification object];
     
-    if (![operation isKindOfClass:[AFHTTPRequestOperation class]]) {
+    if (![operation isKindOfClass:[SAHTTPRequestOperation class]]) {
         return;
     }
     
-    objc_setAssociatedObject(operation, AFHTTPRequestOperationStartDate, [NSDate date], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(operation, SAHTTPRequestOperationStartDate, [NSDate date], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
     if (self.filterPredicate && [self.filterPredicate evaluateWithObject:operation]) {
         return;
@@ -87,10 +87,10 @@ static void * AFHTTPRequestOperationStartDate = &AFHTTPRequestOperationStartDate
     }
     
     switch (self.level) {
-        case AFLoggerLevelDebug:
+        case SALoggerLevelDebug:
             NSLog(@"%@ '%@': %@ %@", [operation.request HTTPMethod], [[operation.request URL] absoluteString], [operation.request allHTTPHeaderFields], body);
             break;
-        case AFLoggerLevelInfo:
+        case SALoggerLevelInfo:
             NSLog(@"%@ '%@'", [operation.request HTTPMethod], [[operation.request URL] absoluteString]);
             break;
         default:
@@ -99,9 +99,9 @@ static void * AFHTTPRequestOperationStartDate = &AFHTTPRequestOperationStartDate
 }
 
 - (void)HTTPOperationDidFinish:(NSNotification *)notification {
-    AFHTTPRequestOperation *operation = (AFHTTPRequestOperation *)[notification object];
+    SAHTTPRequestOperation *operation = (SAHTTPRequestOperation *)[notification object];
     
-    if (![operation isKindOfClass:[AFHTTPRequestOperation class]]) {
+    if (![operation isKindOfClass:[SAHTTPRequestOperation class]]) {
         return;
     }
     
@@ -109,24 +109,24 @@ static void * AFHTTPRequestOperationStartDate = &AFHTTPRequestOperationStartDate
         return;
     }
     
-    NSTimeInterval elapsedTime = [[NSDate date] timeIntervalSinceDate:objc_getAssociatedObject(operation, AFHTTPRequestOperationStartDate)];
+    NSTimeInterval elapsedTime = [[NSDate date] timeIntervalSinceDate:objc_getAssociatedObject(operation, SAHTTPRequestOperationStartDate)];
     
     if (operation.error) {
         switch (self.level) {
-            case AFLoggerLevelDebug:
-            case AFLoggerLevelInfo:
-            case AFLoggerLevelWarn:
-            case AFLoggerLevelError:
+            case SALoggerLevelDebug:
+            case SALoggerLevelInfo:
+            case SALoggerLevelWarn:
+            case SALoggerLevelError:
                 NSLog(@"[Error] %@ '%@' (%ld) [%.04f s]: %@", [operation.request HTTPMethod], [[operation.response URL] absoluteString], (long)[operation.response statusCode], elapsedTime, operation.error);
             default:
                 break;
         }
     } else {
         switch (self.level) {
-            case AFLoggerLevelDebug:
+            case SALoggerLevelDebug:
                 NSLog(@"%ld '%@' [%.04f s]: %@ %@", (long)[operation.response statusCode], [[operation.response URL] absoluteString], elapsedTime, [operation.response allHeaderFields], operation.responseString);
                 break;
-            case AFLoggerLevelInfo:
+            case SALoggerLevelInfo:
                 NSLog(@"%ld '%@' [%.04f s]", (long)[operation.response statusCode], [[operation.response URL] absoluteString], elapsedTime);
                 break;
             default:
